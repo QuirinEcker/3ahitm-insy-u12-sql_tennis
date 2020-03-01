@@ -6,7 +6,8 @@
 CREATE TABLE PLAYER (
     membernr NUMBER(4, 0) NOT NULL,
     name VARCHAR2(15) NOT NULL,
-    initials VARCHAR2(3)
+    initials VARCHAR2(3),
+    CONSTRAINT PK_PLAYER PRIMARY KEY (membernr)
 );
 ```
 
@@ -22,7 +23,7 @@ ALTER TABLE PLAYER ADD (
 
 ```sql
 ALTER TABLE PLAYER MODIFY (
-    name VARCHAR2(45) NOT NULL
+    name VARCHAR2(45)
 );
 
 ```
@@ -38,10 +39,12 @@ DESC PLAYER;
 ```sql
 CREATE TABLE FINE (
     finenr NUMBER(6, 0) NOT NULL,
-    membernr NUMBER(4, 0) NOT NULL,
-    date DATE NOT NULL,
-    fine_money MONEY NOT NULL,
-    reasson VARCHAR(150) NULL
+    playernr NUMBER(4, 0) NOT NULL,
+    fine_date DATE NOT NULL,
+    fine_money NUMBER(15, 2) NOT NULL,
+    reasson VARCHAR(150) NULL,
+    CONSTRAINT FK_FINE_PLAYER FOREIGN KEY (playernr) REFERENCES PLAYER (membernr),
+    CONSTRAINT PK_FINE PRIMARY KEY (finenr)
 );
 ```
 
@@ -54,11 +57,10 @@ ALTER TABLE FINE DROP COLUMN reasson;
 ## G. Copy Table Player
 
 ```sql
-CREATE TABLE COPY_PLAYER [(
-    membernr NUMBER(4, 0) NOT NULL,
-    name VARCHAR2(45) NOT NULL
-)] AS SELECT membernr, name
-FROM TABLE PLAYER;
+CREATE TABLE COPY_PLAYER (
+    membernr,
+    name
+) AS SELECT membernr, name FROM PLAYER;
 ```
 
 ## H. Remove content of table Copy_Player
